@@ -15,9 +15,15 @@ func TestHello(t *testing.T) {
 
 		assertCorrectMessage(t, got, want)
 	})
-	t.Run("in Spanish", func(t *testing.T) {
+	t.Run("use the prefix 'Hola, ' when the language is 'Spanish'", func(t *testing.T) {
 		got := Hello("Juan", "Spanish")
 		want := "Hola, Juan!"
+
+		assertCorrectMessage(t, got, want)
+	})
+	t.Run("use the prefix 'Bonjour, ' when the language is 'French'", func(t *testing.T) {
+		got := Hello("François", "French")
+		want := "Bonjour, François!"
 
 		assertCorrectMessage(t, got, want)
 	})
