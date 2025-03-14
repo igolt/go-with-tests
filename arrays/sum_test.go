@@ -51,40 +51,39 @@ func ExampleSumAll() {
 }
 
 func TestSumAllTails(t *testing.T) {
+	checkSums := func(t testing.TB, got, expected []int) {
+		t.Helper()
+		if !slices.Equal(got, expected) {
+			t.Errorf("got %v expected %v", got, expected)
+		}
+	}
+
 	t.Run("sum tails of slices of 2 elements", func(t *testing.T) {
 		got := SumAllTails([]int{1, 2}, []int{0, 9})
 		expected := []int{2, 9}
 
-		if !slices.Equal(got, expected) {
-			t.Errorf("got %v expected %v", got, expected)
-		}
+		checkSums(t, got, expected)
 	})
 
 	t.Run("sum tails of slices with different numbers of elements", func(t *testing.T) {
 		got := SumAllTails([]int{1, 2, 3, 4, 5}, []int{0, 1, 9})
 		expected := []int{14, 10}
 
-		if !slices.Equal(got, expected) {
-			t.Errorf("got %v expected %v", got, expected)
-		}
+		checkSums(t, got, expected)
 	})
 
 	t.Run("sum tails of slices with one element", func(t *testing.T) {
 		got := SumAllTails([]int{1}, []int{9})
 		expected := []int{0, 0}
 
-		if !slices.Equal(got, expected) {
-			t.Errorf("got %v expected %v", got, expected)
-		}
+		checkSums(t, got, expected)
 	})
 
 	t.Run("sum tail of an empty slice", func(t *testing.T) {
 		got := SumAllTails([]int{})
 		expected := []int{0}
 
-		if !slices.Equal(got, expected) {
-			t.Errorf("got %v expected %v", got, expected)
-		}
+		checkSums(t, got, expected)
 	})
 }
 
