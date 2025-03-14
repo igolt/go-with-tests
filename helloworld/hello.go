@@ -1,4 +1,4 @@
-package main
+package helloworld
 
 import "fmt"
 
@@ -29,8 +29,4 @@ func greetingPrefix(language string) (prefix string) {
 		prefix = englishHelloPrefix
 	}
 	return
-}
-
-func main() {
-	fmt.Println(Hello("world", ""))
 }
