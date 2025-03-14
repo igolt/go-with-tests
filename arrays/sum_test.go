@@ -79,7 +79,7 @@ func TestSumAllTails(t *testing.T) {
 	})
 
 	t.Run("sum tail of an empty slice", func(t *testing.T) {
-		got := SumAllTails([]int{0})
+		got := SumAllTails([]int{})
 		expected := []int{0}
 
 		if !slices.Equal(got, expected) {
