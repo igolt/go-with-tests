@@ -1,6 +1,7 @@
 package arrays
 
 import (
+	"fmt"
 	"slices"
 	"testing"
 )
@@ -28,6 +29,12 @@ func TestSum(t *testing.T) {
 	})
 }
 
+func ExampleSum() {
+	sum := Sum([]int{10, 20, 30, 40})
+	fmt.Println(sum)
+	// Output: 100
+}
+
 func TestSumAll(t *testing.T) {
 	got := SumAll([]int{1, 2}, []int{0, 9})
 	expected := []int{3, 9}
@@ -35,6 +42,12 @@ func TestSumAll(t *testing.T) {
 	if !slices.Equal(got, expected) {
 		t.Errorf("got %d expected %d", got, expected)
 	}
+}
+
+func ExampleSumAll() {
+	sums := SumAll([]int{10, 20}, []int{1, 2, 3})
+	fmt.Println(sums)
+	// Output: [30 6]
 }
 
 func TestSumAllTails(t *testing.T) {
@@ -73,4 +86,10 @@ func TestSumAllTails(t *testing.T) {
 			t.Errorf("got %v expected %v", got, expected)
 		}
 	})
+}
+
+func ExampleSumAllTails() {
+	sums := SumAllTails([]int{10, 20}, []int{1, 2, 3})
+	fmt.Println(sums)
+	// Output: [20 5]
 }
