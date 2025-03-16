@@ -11,10 +11,6 @@ func TestPerimeter(t *testing.T) {
 	}
 }
 
-type Shape interface {
-	Area() float64
-}
-
 func TestArea(t *testing.T) {
 	areaTests := []struct {
 		shape    Shape
@@ -22,6 +18,7 @@ func TestArea(t *testing.T) {
 	}{
 		{Rectangle{10, 10}, 100},
 		{Circle{10}, 314.1592653589793},
+		{Triangle{12, 6}, 36},
 	}
 
 	for _, tt := range areaTests {
