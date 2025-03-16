@@ -3,7 +3,7 @@ package structs
 import "testing"
 
 func TestPerimeter(t *testing.T) {
-	got := Perimeter(10, 10)
+	got := Perimeter(Rectangle{10, 10})
 	var expected float64 = 40
 
 	if got != expected {
@@ -12,7 +12,7 @@ func TestPerimeter(t *testing.T) {
 }
 
 func TestArea(t *testing.T) {
-	got := Area(10, 10)
+	got := Area(Rectangle{10, 10})
 	var expected float64 = 100
 
 	if got != expected {
