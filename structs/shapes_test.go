@@ -12,10 +12,25 @@ func TestPerimeter(t *testing.T) {
 }
 
 func TestArea(t *testing.T) {
-	got := Area(Rectangle{10, 10})
-	var expected float64 = 100
+	t.Run("rectangle area", func(t *testing.T) {
+		rectangle := Rectangle{10, 10}
 
-	if got != expected {
-		t.Errorf("got %.2f expected %.2f", got, expected)
-	}
+		got := rectangle.Area()
+		var expected float64 = 100
+
+		if got != expected {
+			t.Errorf("got %.2f expected %.2f", got, expected)
+		}
+	})
+
+	t.Run("circle area", func(t *testing.T) {
+		circle := Circle{10}
+
+		got := circle.Area()
+		var expected float64 = 314.1592653589793
+
+		if got != expected {
+			t.Errorf("got %g expected %g", got, expected)
+		}
+	})
 }
