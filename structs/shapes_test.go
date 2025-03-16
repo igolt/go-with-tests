@@ -16,20 +16,18 @@ type Shape interface {
 }
 
 func TestArea(t *testing.T) {
-	checkArea := func(t testing.TB, shape Shape, expected float64) {
-		t.Helper()
-		got := shape.Area()
-
-		if got != expected {
-			t.Errorf("got %g expected %g", got, expected)
-		}
+	areaTests := []struct {
+		shape    Shape
+		expected float64
+	}{
+		{Rectangle{10, 10}, 100},
+		{Circle{10}, 314.1592653589793},
 	}
 
-	t.Run("rectangle area", func(t *testing.T) {
-		checkArea(t, Rectangle{10, 10}, 100)
-	})
-
-	t.Run("circle area", func(t *testing.T) {
-		checkArea(t, Circle{10}, 314.1592653589793)
-	})
+	for _, tt := range areaTests {
+		got := tt.shape.Area()
+		if got != tt.expected {
+			t.Errorf("got %g expected %g", got, tt.expected)
+		}
+	}
 }
