@@ -11,26 +11,25 @@ func TestPerimeter(t *testing.T) {
 	}
 }
 
+type Shape interface {
+	Area() float64
+}
+
 func TestArea(t *testing.T) {
-	t.Run("rectangle area", func(t *testing.T) {
-		rectangle := Rectangle{10, 10}
-
-		got := rectangle.Area()
-		var expected float64 = 100
-
-		if got != expected {
-			t.Errorf("got %.2f expected %.2f", got, expected)
-		}
-	})
-
-	t.Run("circle area", func(t *testing.T) {
-		circle := Circle{10}
-
-		got := circle.Area()
-		var expected float64 = 314.1592653589793
+	checkArea := func(t testing.TB, shape Shape, expected float64) {
+		t.Helper()
+		got := shape.Area()
 
 		if got != expected {
 			t.Errorf("got %g expected %g", got, expected)
 		}
+	}
+
+	t.Run("rectangle area", func(t *testing.T) {
+		checkArea(t, Rectangle{10, 10}, 100)
+	})
+
+	t.Run("circle area", func(t *testing.T) {
+		checkArea(t, Circle{10}, 314.1592653589793)
 	})
 }
