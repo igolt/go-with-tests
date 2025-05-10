@@ -1,6 +1,7 @@
 package blogposts_test
 
 import (
+	"reflect"
 	"testing"
 	"testing/fstest"
 
@@ -19,8 +20,8 @@ import (
 
 func TestNewBlogPosts(t *testing.T) {
 	fs := fstest.MapFS{
-		"hello world.md":  {Data: []byte("hi")},
-		"hello-world2.md": {Data: []byte("hola")},
+		"hello world.md":  {Data: []byte("Title: Post 1")},
+		"hello-world2.md": {Data: []byte("Title: Post 2")},
 	}
 
 	posts, err := blogposts.NewPostsFromFS(fs)
@@ -28,7 +29,10 @@ func TestNewBlogPosts(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if len(posts) != len(fs) {
-		t.Errorf("got %d posts, expected %d pots", len(posts), len(fs))
+	got := posts[0]
+	expected := blogposts.Post{Title: "Post 1"}
+
+	if !reflect.DeepEqual(got, expected) {
+		t.Errorf("got %+v, expected %+v", got, expected)
 	}
 }
