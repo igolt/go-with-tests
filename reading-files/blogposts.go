@@ -3,12 +3,14 @@ package blogposts
 import (
 	"bufio"
 	"io/fs"
+	"regexp"
 	"strings"
 )
 
 type Post struct {
 	Title       string
 	Description string
+	Tags        []string
 }
 
 func NewPostsFromFS(fileSystem fs.FS) ([]Post, error) {
@@ -40,7 +42,10 @@ func getPost(fileSystem fs.FS, fileName string) (Post, error) {
 const (
 	titleSeparator       = "Title: "
 	descriptionSeparator = "Description: "
+	tagsSeparator        = "Tags: "
 )
+
+var tagsSeparatorRegex = regexp.MustCompile(`,\s*`)
 
 func newPostFromFile(file fs.File) (Post, error) {
 	scanner := bufio.NewScanner(file)
@@ -53,5 +58,6 @@ func newPostFromFile(file fs.File) (Post, error) {
 	return Post{
 		Title:       readMetaLine(titleSeparator),
 		Description: readMetaLine(descriptionSeparator),
+		Tags:        tagsSeparatorRegex.Split(readMetaLine(tagsSeparator), -1),
 	}, nil
 }
