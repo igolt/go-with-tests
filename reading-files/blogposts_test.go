@@ -5,7 +5,7 @@ import (
 	"testing"
 	"testing/fstest"
 
-	blogposts "example.com/hello/reading-files"
+	blogposts "github.com/igolt/go-with-tests/reading-files"
 )
 
 // we could use something like this to test if an error occurred, but in our

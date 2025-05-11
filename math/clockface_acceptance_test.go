@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	clockface "example.com/hello/math"
+	clockface "github.com/igolt/go-with-tests/math"
 )
 
 type SVG struct {
