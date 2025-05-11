@@ -22,10 +22,18 @@ func TestNewBlogPosts(t *testing.T) {
 	const (
 		firstBody = `Title: Post 1
 Description: Description 1
-Tags: tdd, go`
+Tags: tdd, go
+---
+Hello, it's me
+you're looking for`
 		secondBody = `Title: Post 2
 Description: Description 2
-Tags: rust, borrow-checker`
+Tags: rust, borrow-checker
+---
+T
+N
+T
+`
 	)
 
 	fs := fstest.MapFS{
@@ -43,6 +51,8 @@ Tags: rust, borrow-checker`
 		Title:       "Post 1",
 		Description: "Description 1",
 		Tags:        []string{"tdd", "go"},
+		Body: `Hello, it's me
+you're looking for`,
 	}
 
 	assertPostsAreEqual(t, got, expected)
@@ -51,6 +61,6 @@ Tags: rust, borrow-checker`
 func assertPostsAreEqual(t testing.TB, got blogposts.Post, expected blogposts.Post) {
 	t.Helper()
 	if !reflect.DeepEqual(got, expected) {
-		t.Errorf("got %+v, expected %+v", got, expected)
+		t.Errorf("got %#v, expected %#v", got, expected)
 	}
 }
