@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"testing"
 
+	approvals "github.com/approvals/go-approval-tests"
 	blogrenderer "github.com/igolt/go-with-tests/templating"
 )
 
@@ -22,18 +23,6 @@ func TestRender(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		got := buf.String()
-		// 		expected := `<h1>Hello World</h1>
-		// <p>Post description</p>
-		// <ul>
-		// 	<li>go</li>
-		// 	<li>tdd</li>
-		// </ul>`
-		expected := `<h1>Hello World</h1>
-<p>Post description</p>`
-
-		if got != expected {
-			t.Errorf("got %#v expected %#v", got, expected)
-		}
+		approvals.VerifyString(t, buf.String())
 	})
 }
