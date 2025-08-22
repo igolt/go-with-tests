@@ -14,6 +14,10 @@ type Post struct {
 	Body        string
 }
 
+func (p *Post) SanitisedTitle() string {
+	return strings.ToLower(strings.ReplaceAll(p.Title, " ", "-"))
+}
+
 //go:embed "templates/*"
 var postTemplates embed.FS
 
@@ -34,13 +38,9 @@ func (r *PostRenderer) Render(w io.Writer, post Post) error {
 }
 
 func (r *PostRenderer) RenderIndex(w io.Writer, posts []Post) error {
-	indexTemplate := `<ol>{{range .}}<li><a href="/post/{{sanitiseTitle .Title}}">{{.Title}}</a></li>{{end}}</ol>`
+	indexTemplate := `<ol>{{range .}}<li><a href="/post/{{.SanitisedTitle}}">{{.Title}}</a></li>{{end}}</ol>`
 
-	templ, err := template.New("index").Funcs(template.FuncMap{
-		"sanitiseTitle": func(title string) string {
-			return strings.ToLower(strings.ReplaceAll(title, " ", "-"))
-		},
-	}).Parse(indexTemplate)
+	templ, err := template.New("index").Parse(indexTemplate)
 	if err != nil {
 		return err
 	}
