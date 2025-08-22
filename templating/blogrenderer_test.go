@@ -39,12 +39,7 @@ func TestRender(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		got := buf.String()
-		expected := `<ol><li><a href="/post/hello-world">Hello World</a></li><li><a href="/post/hello-world-2">Hello World 2</a></li></ol>`
-
-		if got != expected {
-			t.Errorf("expected %q but got %q", expected, got)
-		}
+		approvals.VerifyString(t, buf.String())
 	})
 }
 
