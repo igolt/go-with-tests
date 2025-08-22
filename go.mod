@@ -1,5 +1,5 @@
 module github.com/igolt/go-with-tests
 
-go 1.23.5
+go 1.24.0
 
-require github.com/approvals/go-approval-tests v1.5.1 // indirect
+require github.com/approvals/go-approval-tests v1.5.1
