@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -12,6 +11,7 @@ import (
 type stubPlayerStore struct {
 	scores   map[string]int
 	winCalls []string
+	league   []Player
 }
 
 func (s *stubPlayerStore) GetPlayerScore(player string) int {
@@ -22,13 +22,17 @@ func (s *stubPlayerStore) RecordWin(player string) {
 	s.winCalls = append(s.winCalls, player)
 }
 
+func (s *stubPlayerStore) GetLeague() []Player {
+	return s.league
+}
+
 func TestGETPlayers(t *testing.T) {
-	playerServer := NewPlayerServer(&stubPlayerStore{map[string]int{
+	server := NewPlayerServer(&stubPlayerStore{map[string]int{
 		"Pepper": 20, "Floyd": 10,
-	}, nil})
+	}, nil, nil})
 
 	t.Run("returns Pepper's score", func(t *testing.T) {
-		response := _GETPlayerScore(playerServer, "Pepper")
+		response := _GETPlayerScore(server, "Pepper")
 		score := response.Body.String()
 
 		asserts.AssertEqual(t, response.Code, http.StatusOK)
@@ -36,7 +40,7 @@ func TestGETPlayers(t *testing.T) {
 	})
 
 	t.Run("returns Floyd's score", func(t *testing.T) {
-		response := _GETPlayerScore(playerServer, "Floyd")
+		response := _GETPlayerScore(server, "Floyd")
 		score := response.Body.String()
 
 		asserts.AssertEqual(t, response.Code, http.StatusOK)
@@ -44,21 +48,21 @@ func TestGETPlayers(t *testing.T) {
 	})
 
 	t.Run("return 404 on missing player", func(t *testing.T) {
-		response := _GETPlayerScore(playerServer, "NotFound")
+		response := _GETPlayerScore(server, "NotFound")
 
 		asserts.AssertEqual(t, response.Code, http.StatusNotFound)
 	})
 }
 
 func TestRecordWins(t *testing.T) {
-	store := &stubPlayerStore{map[string]int{}, nil}
-	playerServer := NewPlayerServer(store)
+	store := &stubPlayerStore{map[string]int{}, nil, nil}
+	server := NewPlayerServer(store)
 
 	t.Run("it record wins when POST", func(t *testing.T) {
 		request := newRecordWinRequest("Pepper")
 		response := httptest.NewRecorder()
 
-		playerServer.ServeHTTP(response, request)
+		server.ServeHTTP(response, request)
 
 		asserts.AssertEqual(t, response.Code, http.StatusAccepted)
 		asserts.AssertEqual(t, len(store.winCalls), 1)
@@ -66,20 +70,25 @@ func TestRecordWins(t *testing.T) {
 	})
 }
 
-func _GETPlayerScore(playerServer *PlayerServer, player string) *httptest.ResponseRecorder {
-	request := newGetScoreRequest(player)
-	response := httptest.NewRecorder()
+func TestLeague(t *testing.T) {
+	t.Run("it returns 200 on /league", func(t *testing.T) {
+		expectedLeague := []Player{
+			{"Cleo", 32},
+			{"Chris", 20},
+			{"Tiest", 14},
+		}
 
-	playerServer.ServeHTTP(response, request)
-	return response
-}
+		store := &stubPlayerStore{nil, nil, expectedLeague}
+		server := NewPlayerServer(store)
 
-func newGetScoreRequest(player string) *http.Request {
-	request, _ := http.NewRequest(http.MethodGet, fmt.Sprintf("/players/%s", player), nil)
-	return request
-}
+		request := newLeagueRequest()
+		response := httptest.NewRecorder()
 
-func newRecordWinRequest(player string) *http.Request {
-	request, _ := http.NewRequest(http.MethodPost, fmt.Sprintf("/players/%s", player), nil)
-	return request
+		server.ServeHTTP(response, request)
+
+		got := getLeagueFromResponse(t, response.Body)
+		asserts.AssertEqual(t, response.Code, http.StatusOK)
+		assertLeague(t, got, expectedLeague)
+		assertContentType(t, response, "application/json")
+	})
 }
