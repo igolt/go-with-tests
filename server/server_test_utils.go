@@ -33,17 +33,17 @@ func newLeagueRequest() *http.Request {
 	return request
 }
 
-func getLeagueFromResponse(t testing.TB, body io.Reader) []Player {
+func getLeagueFromResponse(t testing.TB, body io.Reader) League {
 	t.Helper()
 
-	var league []Player
+	var league League
 	if err := json.NewDecoder(body).Decode(&league); err != nil {
 		t.Fatalf("unable to parse response from server %q into slice of Player, '%v'", body, err)
 	}
 	return league
 }
 
-func assertLeague(t testing.TB, got, expected []Player) {
+func assertLeague(t testing.TB, got, expected League) {
 	t.Helper()
 
 	if !reflect.DeepEqual(got, expected) {

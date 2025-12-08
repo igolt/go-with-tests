@@ -11,7 +11,7 @@ import (
 type stubPlayerStore struct {
 	scores   map[string]int
 	winCalls []string
-	league   []Player
+	league   League
 }
 
 func (s *stubPlayerStore) GetPlayerScore(player string) int {
@@ -22,7 +22,7 @@ func (s *stubPlayerStore) RecordWin(player string) {
 	s.winCalls = append(s.winCalls, player)
 }
 
-func (s *stubPlayerStore) GetLeague() []Player {
+func (s *stubPlayerStore) GetLeague() League {
 	return s.league
 }
 
@@ -72,7 +72,7 @@ func TestRecordWins(t *testing.T) {
 
 func TestLeague(t *testing.T) {
 	t.Run("it returns 200 on /league", func(t *testing.T) {
-		expectedLeague := []Player{
+		expectedLeague := League{
 			{"Cleo", 32},
 			{"Chris", 20},
 			{"Tiest", 14},

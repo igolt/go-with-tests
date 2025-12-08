@@ -9,7 +9,14 @@ import (
 )
 
 func TestRecordWinsAndRetrievingThem(t *testing.T) {
-	store := NewInMemoryPlayerStore()
+	file, removeFile := createTempFile(t, `[]`)
+	defer removeFile()
+
+	store, err := NewFileSystemPlayerStore(file)
+	if err != nil {
+		t.Fatalf("failed to start player store: %v", err)
+	}
+
 	server := NewPlayerServer(store)
 	player := "Pepper"
 
@@ -33,6 +40,6 @@ func TestRecordWinsAndRetrievingThem(t *testing.T) {
 
 		asserts.AssertEqual(t, response.Code, http.StatusOK)
 		assertContentType(t, response, "application/json")
-		assertLeague(t, got, []Player{{"Pepper", 3}})
+		assertLeague(t, got, League{{"Pepper", 3}})
 	})
 }
