@@ -14,6 +14,20 @@ type FileSystemPlayerStore struct {
 	jsonEncoder json.Encoder
 }
 
+func NewFileSystemPlayerStoreFromFile(path string) (*FileSystemPlayerStore, func(), error) {
+	db, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE, 0644)
+	if err != nil {
+		return nil, nil, fmt.Errorf("problem opening %s %v", path, err)
+	}
+
+	store, err := NewFileSystemPlayerStore(db)
+	if err != nil {
+		db.Close()
+		return nil, nil, err
+	}
+	return store, func() { db.Close() }, nil
+}
+
 func NewFileSystemPlayerStore(file *os.File) (*FileSystemPlayerStore, error) {
 	if err := initializePlayerFile(file); err != nil {
 		return nil, err

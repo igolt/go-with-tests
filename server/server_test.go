@@ -8,26 +8,8 @@ import (
 	"github.com/igolt/go-with-tests/asserts"
 )
 
-type stubPlayerStore struct {
-	scores   map[string]int
-	winCalls []string
-	league   League
-}
-
-func (s *stubPlayerStore) GetPlayerScore(player string) int {
-	return s.scores[player]
-}
-
-func (s *stubPlayerStore) RecordWin(player string) {
-	s.winCalls = append(s.winCalls, player)
-}
-
-func (s *stubPlayerStore) GetLeague() League {
-	return s.league
-}
-
 func TestGETPlayers(t *testing.T) {
-	server := NewPlayerServer(&stubPlayerStore{map[string]int{
+	server := NewPlayerServer(&StubPlayerStore{map[string]int{
 		"Pepper": 20, "Floyd": 10,
 	}, nil, nil})
 
@@ -55,7 +37,7 @@ func TestGETPlayers(t *testing.T) {
 }
 
 func TestRecordWins(t *testing.T) {
-	store := &stubPlayerStore{map[string]int{}, nil, nil}
+	store := &StubPlayerStore{map[string]int{}, nil, nil}
 	server := NewPlayerServer(store)
 
 	t.Run("it record wins when POST", func(t *testing.T) {
@@ -65,8 +47,8 @@ func TestRecordWins(t *testing.T) {
 		server.ServeHTTP(response, request)
 
 		asserts.AssertEqual(t, response.Code, http.StatusAccepted)
-		asserts.AssertEqual(t, len(store.winCalls), 1)
-		asserts.AssertEqual(t, store.winCalls[0], "Pepper")
+		asserts.AssertEqual(t, len(store.WinCalls), 1)
+		asserts.AssertEqual(t, store.WinCalls[0], "Pepper")
 	})
 }
 
@@ -78,7 +60,7 @@ func TestLeague(t *testing.T) {
 			{"Tiest", 14},
 		}
 
-		store := &stubPlayerStore{nil, nil, expectedLeague}
+		store := &StubPlayerStore{nil, nil, expectedLeague}
 		server := NewPlayerServer(store)
 
 		request := newLeagueRequest()
