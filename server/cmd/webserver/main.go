@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/igolt/go-with-tests/server"
+	poker "github.com/igolt/go-with-tests/server"
 )
 
 const dbFileName = "game.db.json"
@@ -16,11 +16,11 @@ func main() {
 		log.Fatalf("failed opening %s %v", dbFileName, err)
 	}
 
-	store, err := server.NewFileSystemPlayerStore(file)
+	store, err := poker.NewFileSystemPlayerStore(file)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	handler := server.NewPlayerServer(store)
+	handler := poker.NewPlayerServer(store)
 	log.Fatal(http.ListenAndServe(":5000", handler))
 }
