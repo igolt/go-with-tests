@@ -15,7 +15,7 @@ func AssertFalse(t *testing.T, got bool) {
 func AssertEqual[T comparable](t *testing.T, got, expected T) {
 	t.Helper()
 	if expected != got {
-		t.Errorf("expected %v but got %v", expected, got)
+		t.Errorf("expected %#v but got %#v", expected, got)
 	}
 }
 
